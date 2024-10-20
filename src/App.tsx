@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { getTodos, USER_ID } from './api/todos';
-import { UserWarning } from './UserWarning';
+import { getTodos } from './api/todos';
 
 import { Todo } from './types/Todo';
 import { Filter } from './types/Filter';
@@ -43,15 +42,13 @@ export const App: React.FC = () => {
         setErrorMessage,
       );
     }
+  }, [deletionIds]);
 
+  useEffect(() => {
     getTodos()
       .then(setTodosFromServer)
       .catch(() => handleError(setErrorMessage, Errors.LoadingTodos));
-  }, [deletionIds]);
-
-  if (!USER_ID) {
-    return <UserWarning />;
-  }
+  }, []);
 
   return (
     <div className="todoapp">

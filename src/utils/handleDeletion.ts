@@ -11,16 +11,15 @@ export const handleDeletion = (
   setErrorMessage: Dispatch<SetStateAction<Errors>>,
 ) => {
   Promise.allSettled(
-    deletionIds.map(async id => {
-      await deleteTodo(id)
+    deletionIds.map(id => {
+      deleteTodo(id)
         .then(() => {
           setTodos(current => current.filter(todo => todo.id !== id));
-          setDeletionIds(() => []);
         })
         .catch(() => {
           handleError(setErrorMessage, Errors.DeleteTodo);
-          setDeletionIds([]);
-        });
+        })
+        .finally(() => setDeletionIds([]));
     }),
   );
 };

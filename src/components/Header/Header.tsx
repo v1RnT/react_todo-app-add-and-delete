@@ -36,7 +36,9 @@ export const Header: FC<Props> = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!inputValue.trim()) {
+    const trimmedInputValues = inputValue.trim();
+
+    if (!trimmedInputValues) {
       handleError(setError, Errors.EmptyTitle);
 
       return;
@@ -45,7 +47,7 @@ export const Header: FC<Props> = ({
     const temporaryTodo: Todo = {
       id: 0,
       userId: USER_ID,
-      title: inputValue.trim(),
+      title: trimmedInputValues,
       completed: false,
     };
 
@@ -60,8 +62,6 @@ export const Header: FC<Props> = ({
       .catch(() => {
         setTempTodo(null);
         handleError(setError, Errors.AddTodo);
-
-        setInputValue(inputValue);
       });
   };
 

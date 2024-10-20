@@ -1,4 +1,10 @@
-import { FC, FormEventHandler, MutableRefObject } from 'react';
+import {
+  Dispatch,
+  FC,
+  FormEventHandler,
+  MutableRefObject,
+  SetStateAction,
+} from 'react';
 import { Todo } from '../../types/Todo';
 
 type Props = {
@@ -6,7 +12,7 @@ type Props = {
   inputRef: MutableRefObject<HTMLInputElement | null>;
   tempTodo: Todo | null;
   inputValue: string;
-  setInputValue: (value: string) => void;
+  setInputValue: Dispatch<SetStateAction<string>>;
 };
 
 export const InputForm: FC<Props> = ({
