@@ -1,4 +1,11 @@
-import { FC, Dispatch, SetStateAction, useRef, useEffect } from 'react';
+import {
+  FC,
+  Dispatch,
+  SetStateAction,
+  useRef,
+  useEffect,
+  useState,
+} from 'react';
 import cn from 'classnames';
 import { InputForm } from '../InputForm';
 import { Todo } from '../../types/Todo';
@@ -23,17 +30,13 @@ export const Header: FC<Props> = ({
   setError,
   setTodos,
 }) => {
+  const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement | null>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [todos, tempTodo]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const inputValue = inputRef.current?.value.trim();
 
-    if (!inputValue) {
+    if (!inputValue.trim()) {
       handleError(setError, Errors.EmptyTitle);
 
       return;
@@ -42,7 +45,7 @@ export const Header: FC<Props> = ({
     const temporaryTodo: Todo = {
       id: 0,
       userId: USER_ID,
-      title: inputValue,
+      title: inputValue.trim(),
       completed: false,
     };
 
@@ -51,22 +54,20 @@ export const Header: FC<Props> = ({
     postTodo(temporaryTodo)
       .then(res => {
         setTodos(current => [...current, res]);
-
-        if (inputRef.current?.value) {
-          inputRef.current.value = '';
-        }
-
+        setInputValue('');
         setTempTodo(null);
       })
       .catch(() => {
         setTempTodo(null);
         handleError(setError, Errors.AddTodo);
 
-        if (inputRef.current?.value) {
-          inputRef.current.value = inputValue;
-        }
+        setInputValue(inputValue);
       });
   };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [todos, tempTodo]);
 
   return (
     <header className="todoapp__header">
@@ -84,6 +85,8 @@ export const Header: FC<Props> = ({
         handleSubmit={handleSubmit}
         inputRef={inputRef}
         tempTodo={tempTodo}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
       />
     </header>
   );

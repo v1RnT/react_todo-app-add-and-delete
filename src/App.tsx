@@ -22,21 +22,6 @@ export const App: React.FC = () => {
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [deletionIds, setDeletionIds] = useState<number[]>([]);
 
-  if (deletionIds.length !== 0) {
-    handleDeletion(
-      deletionIds,
-      setTodosFromServer,
-      setDeletionIds,
-      setErrorMessage,
-    );
-  }
-
-  useEffect(() => {
-    getTodos()
-      .then(setTodosFromServer)
-      .catch(() => handleError(setErrorMessage, Errors.LoadingTodos));
-  }, []);
-
   const completedTodoIds = useMemo(() => {
     return todosFromServer.filter(todo => todo.completed).map(todo => todo.id);
   }, [todosFromServer]);
@@ -48,6 +33,21 @@ export const App: React.FC = () => {
   const filteredTodos = useMemo(() => {
     return getFilteredTodos(todosFromServer, filterOption);
   }, [todosFromServer, filterOption]);
+
+  useEffect(() => {
+    if (deletionIds.length) {
+      handleDeletion(
+        deletionIds,
+        setTodosFromServer,
+        setDeletionIds,
+        setErrorMessage,
+      );
+    }
+
+    getTodos()
+      .then(setTodosFromServer)
+      .catch(() => handleError(setErrorMessage, Errors.LoadingTodos));
+  }, [deletionIds]);
 
   if (!USER_ID) {
     return <UserWarning />;

@@ -5,9 +5,17 @@ type Props = {
   handleSubmit: FormEventHandler<HTMLFormElement>;
   inputRef: MutableRefObject<HTMLInputElement | null>;
   tempTodo: Todo | null;
+  inputValue: string;
+  setInputValue: (value: string) => void;
 };
 
-export const InputForm: FC<Props> = ({ handleSubmit, inputRef, tempTodo }) => {
+export const InputForm: FC<Props> = ({
+  handleSubmit,
+  inputRef,
+  tempTodo,
+  inputValue,
+  setInputValue,
+}) => {
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -17,6 +25,8 @@ export const InputForm: FC<Props> = ({ handleSubmit, inputRef, tempTodo }) => {
         className="todoapp__new-todo"
         placeholder="What needs to be done?"
         disabled={!!tempTodo}
+        value={inputValue}
+        onChange={event => setInputValue(event.target.value)}
       />
     </form>
   );
